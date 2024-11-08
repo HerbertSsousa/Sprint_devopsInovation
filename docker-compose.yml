@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: odontoprev-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"  # Mapeia a porta da aplicação
+    networks:
+      - odontoprev-network
+    environment:
+      - JAVA_OPTS=-Xmx512m  # Definições de memória
+    restart: always
+
+  database:
+    image: oracleinanutshell/oracle-xe-11g
+    container_name: odontoprev-db
+    ports:
+      - "1521:1521"  # Porta de conexão com o Oracle
+    environment:
+      ORACLE_ALLOW_REMOTE: "true"
+    volumes:
+      - db_data:/u01/app/oracle
+    networks:
+      - odontoprev-network
+    restart: always
+
+networks:
+  odontoprev-network:
+
+volumes:
+  db_data:
